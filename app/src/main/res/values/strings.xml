@@ -3,4 +3,8 @@
 
     <string name="description">aduiWDadwwwahdauihwdauih</string>
 
+    <string name="navigation_item_main">Home</string>
+    <string name="navigation_item_favourite">favorite</string>
+    <string name="navigation_item_profile">profile</string>
+
 </resources>
