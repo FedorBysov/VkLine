@@ -2,5 +2,9 @@
     <string name="app_name">composestudy1</string>
 
     <string name="description">aduiWDadwwwahdauihwdauih</string>
+    <string name="navigation_main_name">Home</string>
+    <string name="navigation_main_like">Like</string>
+    <string name="navigation_main_profile">Profile</string>
+
 
 </resources>

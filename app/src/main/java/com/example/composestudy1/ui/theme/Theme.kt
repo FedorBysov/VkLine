@@ -17,20 +17,20 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Black900,
-    secondary = Black900,
-    onPrimary = Color.White,
-    onSecondary = Black500
+    primary = Color.Black,
+    secondary = Color.Black,
+    onPrimary = Color.Black,
+    onSecondary = Color.Black
 
 
     )
 
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color.White,
-    secondary = Color.White,
-    onPrimary = Black900,
-    onSecondary = Black500
+    primary = Color.Black,
+    secondary = Color.Black,
+    onPrimary = Color.Black,
+    onSecondary = Color.Black
 
 
     /* Other default colors to override
@@ -43,6 +43,8 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+
+
 
 @Composable
 fun Composestudy1Theme(
