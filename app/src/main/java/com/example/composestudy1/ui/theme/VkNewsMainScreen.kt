@@ -22,26 +22,37 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.traceEventEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.composestudy1.MainViewModel
 import com.example.composestudy1.domain.FeedPost
+import com.example.composestudy1.navigation.AppNavGraph
+import com.example.composestudy1.navigation.NavigationState
+import com.example.composestudy1.navigation.RememberNavigationState
+import com.example.composestudy1.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
 
-    val feedPosts = viewModel.feedPosts.observeAsState(listOf())
+    val navigationState = RememberNavigationState()
+
     Scaffold(
         bottomBar = {
             NavigationBar {
-                val selectedItemPosition = remember {
-                    mutableStateOf(0)
-                }
+                val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
+                val currentRout = navBackStackEntry?.destination?.route
+
+
 
                 val items = listOf(
                     NavigationItem.Home,
@@ -50,8 +61,8 @@ fun MainScreen(viewModel: MainViewModel) {
                 )
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
-                        selected = selectedItemPosition.value == index,
-                        onClick = { selectedItemPosition.value = index },
+                        selected = currentRout == item.screen.route,
+                        onClick = { navigationState.navigateTo(item.screen.route) },
                         icon = {
                             Icon(item.icon, contentDescription = null)
                         },
@@ -69,42 +80,19 @@ fun MainScreen(viewModel: MainViewModel) {
                 }
             }
         }
-    ) {
-        it.calculateBottomPadding()
-
-        LazyColumn(
-            state = rememberLazyListState(),
-            modifier = Modifier.padding(it),
-            contentPadding = PaddingValues(
-                top = 16.dp,
-                start = 8.dp,
-                end = 8.dp,
-                bottom = 16.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(
-                items = feedPosts.value,
-                key = { it.id }
-            ) { feedPost ->
-
-
-                    PostCard(
-                        feedPost = feedPost,
-                        onViewsClickListener = { statisticItem ->
-                            viewModel.updateCount(feedPost, statisticItem)
-                        },
-                        onShareClickListener = { statisticItem ->
-                            viewModel.updateCount(feedPost, statisticItem)
-                        },
-                        onCommentClickListener = { statisticItem ->
-                            viewModel.updateCount(feedPost, statisticItem)
-                        },
-                        onLikeClickListener = { statisticItem ->
-                            viewModel.updateCount(feedPost, statisticItem)
-                        },
-                    )
-            }
-        }
+    ) { paddingValues ->
+        AppNavGraph(
+            navHostController = navigationState.navHostController,
+            homeScreenContent = {
+                HomeScreen(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues
+                )
+            },
+            favoriteScreenContent = { Text( text= "Favourite") },
+            profileScreenContent = { Text(text = "Profile") }
+        )
     }
 }
+
+
