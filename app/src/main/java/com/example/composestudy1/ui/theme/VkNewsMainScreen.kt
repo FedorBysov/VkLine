@@ -1,7 +1,16 @@
 package com.example.composestudy1.ui.theme
 
+import androidx.activity.BackEventCompat
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.DismissibleDrawerSheet
+import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,9 +35,7 @@ import com.example.composestudy1.domain.FeedPost
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
 
-    val feedPost = viewModel.feedPost.observeAsState(FeedPost())
-
-
+    val feedPosts = viewModel.feedPosts.observeAsState(listOf())
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -53,8 +60,8 @@ fun MainScreen(viewModel: MainViewModel) {
                         },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSecondary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.secondary,
                             unselectedTextColor = MaterialTheme.colorScheme.onSecondary,
                             indicatorColor = MaterialTheme.colorScheme.primary
                         )
@@ -65,13 +72,39 @@ fun MainScreen(viewModel: MainViewModel) {
     ) {
         it.calculateBottomPadding()
 
-        PostCard(
-            modifier = Modifier.padding(8.dp),
-            feedPost = feedPost.value,
-            onCommentClickListener = viewModel::updateCount,
-            onLikeClickListener  = viewModel::updateCount,
-            onShareClickListener = viewModel::updateCount,
-            onViewsClickListener = viewModel::updateCount
-        )
+        LazyColumn(
+            state = rememberLazyListState(),
+            modifier = Modifier.padding(it),
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                start = 8.dp,
+                end = 8.dp,
+                bottom = 16.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(
+                items = feedPosts.value,
+                key = { it.id }
+            ) { feedPost ->
+
+
+                    PostCard(
+                        feedPost = feedPost,
+                        onViewsClickListener = { statisticItem ->
+                            viewModel.updateCount(feedPost, statisticItem)
+                        },
+                        onShareClickListener = { statisticItem ->
+                            viewModel.updateCount(feedPost, statisticItem)
+                        },
+                        onCommentClickListener = { statisticItem ->
+                            viewModel.updateCount(feedPost, statisticItem)
+                        },
+                        onLikeClickListener = { statisticItem ->
+                            viewModel.updateCount(feedPost, statisticItem)
+                        },
+                    )
+            }
+        }
     }
 }

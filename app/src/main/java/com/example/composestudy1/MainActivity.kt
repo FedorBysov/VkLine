@@ -17,14 +17,13 @@ import com.example.composestudy1.ui.theme.MainScreen
 class MainActivity : ComponentActivity() {
 
 
-    private val instagramViewModel by viewModels<InstagramViewModel> ()
 
     private val viewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Composestudy1Theme {
-                TestScroll(viewModel = instagramViewModel)
+                MainScreen(viewModel = viewModel)
             }
 
         }
@@ -32,19 +31,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Composable
-private fun TestScroll(viewModel: InstagramViewModel){
-    val models = viewModel.models.observeAsState(listOf())
-    LazyColumn{
-        items( models.value){
-            model ->
-            InstagramProfileCard(model = model, onFollowedButtonClickListener = {
-                viewModel.changeFollowingStatus(it)
-            })
-        }
-
-    }
-}
 
 
 

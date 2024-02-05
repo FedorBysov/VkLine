@@ -181,12 +181,12 @@ private fun IconWithText(
         Icon(
             painter = painterResource(id = iconResId),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSecondary
+            tint = MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = text,
-            color = MaterialTheme.colorScheme.onSecondary
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }
