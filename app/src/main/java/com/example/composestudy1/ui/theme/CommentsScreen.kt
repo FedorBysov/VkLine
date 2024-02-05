@@ -32,7 +32,8 @@ import com.example.composestudy1.domain.PostComment
 @Composable
 fun CommentScreen(
     feedPost: FeedPost,
-    comments: List<PostComment>
+    comments: List<PostComment>,
+    onBackPressed: ()-> Unit
 ) {
 
     Scaffold(
@@ -41,7 +42,7 @@ fun CommentScreen(
                 Text(text = "Comments For ID  ${feedPost.id}")
             },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { onBackPressed()}) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = null
